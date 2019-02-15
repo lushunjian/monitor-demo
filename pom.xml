@@ -43,6 +43,14 @@
             <artifactId>snmp4j</artifactId>
             <version>1.10.1</version>
         </dependency>
+
+        <!-- java 远程操作 linux 依赖包 -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>262</version>
+        </dependency>
+
     </dependencies>
 
     <build>

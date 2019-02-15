@@ -23,17 +23,25 @@
             <version>1.1.42</version>
         </dependency>
 
+        <!-- sigar -->
         <dependency>
             <groupId>org.fusesource</groupId>
             <artifactId>sigar</artifactId>
             <version>1.6.4</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
+        <!-- oshi -->
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>3.13.0</version>
+        </dependency>
+
+        <!-- snmp -->
+        <dependency>
+            <groupId>org.snmp4j</groupId>
+            <artifactId>snmp4j</artifactId>
+            <version>1.10.1</version>
         </dependency>
     </dependencies>
 

@@ -1,5 +1,7 @@
 package lsj.oshi;
 
+import com.sun.management.OperatingSystemMXBean;
+import oshi.SystemInfo;
 import oshi.hardware.*;
 import oshi.hardware.CentralProcessor.TickType;
 import oshi.software.os.*;
@@ -57,6 +59,13 @@ public class Oshi {
     }
 
     public static void printMemory(GlobalMemory memory) {
+        System.out.println("----java方式获取----");
+        OperatingSystemMXBean mem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        System.out.println("Total RAM：" + FormatUtil.formatBytes(mem.getTotalPhysicalMemorySize()));
+        System.out.println("Available　RAM：" + FormatUtil.formatBytes(mem.getFreePhysicalMemorySize()));
+        System.out.println("----java方式获取----");
+        System.out.println("-avail-:"+memory.getAvailable()+"------Total-:"+memory.getTotal());
+        System.out.println("--freePercent:"+(memory.getAvailable()*100/memory.getTotal()));
         System.out.println("Memory: " + FormatUtil.formatBytes(memory.getAvailable()) + "/"
                 + FormatUtil.formatBytes(memory.getTotal()));
         System.out.println("Swap used: " + FormatUtil.formatBytes(memory.getSwapUsed()) + "/"
@@ -64,6 +73,9 @@ public class Oshi {
     }
 
     public static void printCpu(CentralProcessor processor) {
+        System.out.println("-----cpu数量----"+Runtime.getRuntime().availableProcessors());
+        System.out.println("--启动时间戳--"+processor.getSystemUptime());
+        System.out.println("---系统平均负载--"+processor.getSystemLoadAverage());
         System.out.println("Uptime: " + FormatUtil.formatElapsedSecs(processor.getSystemUptime()));
         System.out.println(
                 "Context Switches/Interrupts: " + processor.getContextSwitches() + " / " + processor.getInterrupts());
@@ -90,6 +102,7 @@ public class Oshi {
                 100d * iowait / totalCpu, 100d * irq / totalCpu, 100d * softirq / totalCpu, 100d * steal / totalCpu);
         System.out.format("CPU load: %.1f%% (counting ticks)%n", processor.getSystemCpuLoadBetweenTicks() * 100);
         System.out.format("CPU load: %.1f%% (OS MXBean)%n", processor.getSystemCpuLoad() * 100);
+        System.out.println("CPU总使用率："+((totalCpu-idle)*100/totalCpu));
         double[] loadAverage = processor.getSystemLoadAverage(3);
         System.out.println("CPU load averages:" + (loadAverage[0] < 0 ? " N/A" : String.format(" %.2f", loadAverage[0]))
                 + (loadAverage[1] < 0 ? " N/A" : String.format(" %.2f", loadAverage[1]))
@@ -156,6 +169,7 @@ public class Oshi {
     public static void printDisks(HWDiskStore[] diskStores) {
         System.out.println("Disks:");
         for (HWDiskStore disk : diskStores) {
+
             boolean readwrite = disk.getReads() > 0 || disk.getWrites() > 0;
             System.out.format(" %s: (model: %s - S/N: %s) size: %s, reads: %s (%s), writes: %s (%s), xfer: %s ms%n",
                     disk.getName(), disk.getModel(), disk.getSerial(),
@@ -187,6 +201,7 @@ public class Oshi {
         for (OSFileStore fs : fsArray) {
             long usable = fs.getUsableSpace();
             long total = fs.getTotalSpace();
+            System.out.println("---free-:"+usable+"---total-:"+total);
             System.out.format(
                     " %s (%s) [%s] %s of %s free (%.1f%%) is %s "
                             + (fs.getLogicalVolume() != null && fs.getLogicalVolume().length() > 0 ? "[%s]" : "%s")
@@ -268,5 +283,35 @@ public class Oshi {
             System.out.println("kind is " + kind + ", pool name is " + pool.getName() + ", jvm." + pool.getName()+ ".committed is " + usage.getCommitted());
             System.out.println("kind is " + kind + ", pool name is " + pool.getName() + ", jvm." + pool.getName() + ".max is " + usage.getMax());
         }
+    }
+
+
+    public static void getNetFlow() throws InterruptedException {
+        SystemInfo si = new SystemInfo();
+        HardwareAbstractionLayer hal = si.getHardware();
+        long send0 = 0;
+        long recive0 = 0;
+        for (NetworkIF net : hal.getNetworkIFs()) {
+            send0 += net.getBytesSent();
+            recive0 += net.getBytesRecv();
+        }
+
+        Thread.sleep(3000);
+
+        SystemInfo si1 = new SystemInfo();
+        HardwareAbstractionLayer hal1 = si.getHardware();
+        long send1 = 0;
+        long recive1 = 0;
+        for (NetworkIF net : hal1.getNetworkIFs()) {
+            send1 += net.getBytesSent();
+            recive1 += net.getBytesRecv();
+        }
+
+        long sendTotal = (send1-send0)>>10;
+        long reciveTotal = (recive1-recive0)>>10;
+        System.out.println("-byte---sendTotal---"+(send1-send0)+"----reciveTotal---"+(recive1-recive0));
+        System.out.println("-kb---sendTotal---"+sendTotal+"----reciveTotal---"+reciveTotal);
+        System.out.println("----send flow-----"+sendTotal/3000 +"kb/s");
+        System.out.println("----recv flow-----"+reciveTotal/3000+"kb/s");
     }
 }

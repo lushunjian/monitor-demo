@@ -4,6 +4,7 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OperatingSystem;
 
+
 public class Test {
 
     public static void main(String[] args) {
@@ -15,7 +16,8 @@ public class Test {
         HardwareAbstractionLayer hal = si.getHardware();
         OperatingSystem os = si.getOperatingSystem();
 
-        System.out.println("----------操作系统信息-----------");
+ /*       System.out.println("----------操作系统信息-----------");
+        System.out.println("---操作系统----"+os.getFamily());
         System.out.println("os:"+os);
         Oshi.printComputerSystem(hal.getComputerSystem());
 
@@ -27,7 +29,7 @@ public class Test {
         System.out.println("----------内存信息获取-----------");
         Oshi.printMemory(hal.getMemory());
 
-        System.out.println();
+         System.out.println();
         System.out.println("----------CPU信息获取-----------");
         Oshi.printCpu(hal.getProcessor());
 
@@ -35,7 +37,7 @@ public class Test {
         System.out.println("----------进程信息获取-----------");
         Oshi.printProcesses(os, hal.getMemory());
 
-        System.out.println();
+           System.out.println();
         System.out.println("----------CPU温度电压获取-----------");
         Oshi.printSensors(hal.getSensors());
 
@@ -45,13 +47,18 @@ public class Test {
 
         System.out.println();
         System.out.println("----------磁盘信息获取-----------");
-        Oshi.printDisks(hal.getDiskStores());
+        Oshi.printDisks(hal.getDiskStores());*/
 
         System.out.println();
         System.out.println("----------文件系统信息获取-----------");
         Oshi.printFileSystem(os.getFileSystem());
 
         System.out.println();
+        System.out.println("----------进程信息获取-----------");
+        Oshi.printProcesses(os, hal.getMemory());
+
+
+       /* System.out.println();
         System.out.println("----------网络接口信息获取-----------");
         Oshi.printNetworkInterfaces(hal.getNetworkIFs());
 
@@ -71,6 +78,15 @@ public class Test {
 
         System.out.println();
         System.out.println("----------本应用JVM信息获取-----------");
-        Oshi.printJVM();
+        Oshi.printJVM();*/
+
+
+/*        try {
+            Oshi.getNetFlow();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
     }
+
 }

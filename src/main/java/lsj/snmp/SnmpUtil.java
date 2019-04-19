@@ -58,7 +58,7 @@ public class SnmpUtil {
             OID[] columns = new OID[1];
             columns[0] = new VariableBinding(new OID(oid)).getOid();
             List list = tu.getTable(target, columns, null, null);
-            map = new LinkedHashMap<>();
+            map = new LinkedHashMap<String, List<String>>();
             for (Object aList : list) {
                 TableEvent te = (TableEvent) aList;
                 VariableBinding[] vb = te.getColumns();
@@ -138,7 +138,7 @@ public class SnmpUtil {
         if (map.containsKey(processId)) {
             return map.get(processId);
         }
-        LinkedList<String> dlist = new LinkedList<>();
+        LinkedList<String> dlist = new LinkedList<String>();
         map.put(processId, dlist);
         return dlist;
     }
@@ -205,14 +205,14 @@ public class SnmpUtil {
      * list
      * */
     public static Map<String,String> snmpAsynWalk(String ip, final List<String> oidList) {
-        final Map<String,String> map = new HashMap<>();
+        final Map<String,String> map = new HashMap<String,String>();
         final CommunityTarget target = createDefault(ip);
         try {
             DefaultUdpTransportMapping transport = new DefaultUdpTransportMapping();
             snmp = new Snmp(transport);
             snmp.listen();
             final PDU pdu = new PDU();
-            final List<OID> oidArray = new ArrayList<>();
+            final List<OID> oidArray = new ArrayList<OID>();
             final CountDownLatch latch = new CountDownLatch(1);
             if(oidList != null && oidList.size()>0){
                 for(String oid : oidList){
@@ -322,7 +322,7 @@ public class SnmpUtil {
      * list
      * */
     public static Map<String,String> snmpGetList(String ip,String port, List<String> oidList) {
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<String,String>();
         CommunityTarget target = SnmpUtil.createTarget(ip,port);
         try {
             PDU pdu = new PDU();

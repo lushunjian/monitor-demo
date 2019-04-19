@@ -1,7 +1,10 @@
 package lsj.sigar;
 
+import com.sun.management.OperatingSystemMXBean;
 import org.hyperic.sigar.*;
+import oshi.util.FormatUtil;
 
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
@@ -17,7 +20,7 @@ public class Test {
 
         sigar = SigarInit.getSigar();
 
-        System.out.println("---------sigar----"+sigar);
+        //System.out.println("---------sigar----"+sigar);
         // System信息，从jvm获取
         try {
             // System信息，从jvm获取
@@ -45,9 +48,11 @@ public class Test {
             ethernet();
             System.out.println("----------------------------------");
             // 进程信息
-            //process();
+            process();
             //processTest();
             System.out.println("----------------------------------");
+
+            //getFlow();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -104,7 +109,9 @@ public class Test {
 
 
     private static void memory() throws SigarException {
-
+        OperatingSystemMXBean mems = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        System.out.println("Total RAM：" + FormatUtil.formatBytes(mems.getTotalPhysicalMemorySize()));
+        System.out.println("Available　RAM：" + FormatUtil.formatBytes(mems.getFreePhysicalMemorySize()));
         //Sigar sigar = new Sigar();
         Mem mem = sigar.getMem();
         // 内存总量
@@ -304,5 +311,37 @@ public class Test {
         Thread.sleep(3000);
         pCpu.gather(sigar, portPID);
         System.out.println("----端口-3306--进程cpu使用率---"+pCpu.getPercent());
+    }
+
+    public static void getFlow() throws SigarException, InterruptedException {
+        Sigar sigar = SigarInit.getSigar();
+        String ifNames[] = sigar.getNetInterfaceList();
+        long sendTotal = 0;
+        long reciveTotal = 0;
+        for (int i = 0; i < ifNames.length; i++) {
+            String name = ifNames[i];
+            System.out.println("网络设备名:    " + name);// 网络设备名
+            NetInterfaceStat ifstat = sigar.getNetInterfaceStat(name);
+            sendTotal += ifstat.getRxBytes();
+            reciveTotal += ifstat.getTxBytes();
+        }
+
+        Thread.sleep(5000);
+
+        String ifNames1[] = sigar.getNetInterfaceList();
+        long sendTotal2 = 0;
+        long reciveTotal2 = 0;
+        for (int i = 0; i < ifNames1.length; i++) {
+            String name = ifNames1[i];
+            System.out.println("网络设备名:    " + name);// 网络设备名
+            NetInterfaceStat ifstat = sigar.getNetInterfaceStat(name);
+            sendTotal2 += ifstat.getRxBytes();
+            reciveTotal2 += ifstat.getTxBytes();
+        }
+
+        System.out.println("-----sendTotal--"+(sendTotal2-sendTotal)+"-----recTotal--"+(reciveTotal2-reciveTotal));
+        System.out.println("---sendFlow--"+(sendTotal2-sendTotal)/5000+"byte/s");
+        System.out.println("---recFlow--"+(reciveTotal2-reciveTotal)/5000+"byte/s");
+
     }
 }

@@ -50,7 +50,6 @@
             <artifactId>ganymed-ssh2</artifactId>
             <version>262</version>
         </dependency>
-
     </dependencies>
 
     <build>

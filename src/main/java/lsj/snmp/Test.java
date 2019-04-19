@@ -53,7 +53,7 @@ public class Test {
         System.out.println("cpu空闲占比:"+cpuFreePercent+"%");
         // cpu核信息
         Map<String, List<String>> map = SnmpUtil.getInfoByOidWalk(ip,oidBean.getPort(),oidBean.getCpuCoreLoad());
-        List<String> loadList = new ArrayList<>();
+        List<String> loadList = new ArrayList<String>();
         if(map != null){
             for(String str : map.keySet()){
                 loadList.addAll(map.get(str));
@@ -97,7 +97,7 @@ public class Test {
 
     //内存信息
     private static void getMemData(String ip,OidBean oidBean){
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         //物理内存总大小  Mem total
         list.add(oidBean.getMemoryPhysicsTotal());
         //物理内存已使用大小  Mem used

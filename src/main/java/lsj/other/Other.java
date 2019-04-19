@@ -14,9 +14,9 @@ public class Other {
 /*        Properties props=System.getProperties(); //获得系统属性集
         String osName = props.getProperty("os.name");
         System.out.println("----操作系统名称-----"+osName);*/
-        //getDiskInfo();
-        double cpu = getCpuUsedPercent();
-        System.out.println("----CPU---"+cpu);
+        getDiskInfo();
+/*        double cpu = getCpuUsedPercent();
+        System.out.println("----CPU---"+cpu);*/
     }
 
     public static void getDiskInfo()
@@ -24,8 +24,8 @@ public class Other {
         File[] disks = File.listRoots();
         for(File file : disks){
             System.out.print(file.getPath() + "    ");
-            System.out.print("空闲未使用 = " + file.getFreeSpace() / 1024 / 1024/1024 + "G" + "    ");// 空闲空间
-            System.out.print("可用容量 = " + file.getUsableSpace() / 1024 / 1024/1024 + "G" + "    ");// 可用空间
+            System.out.print("可用= " + file.getFreeSpace() / 1024 / 1024/1024 + "G" + "    ");// 空闲空间
+            ///System.out.print("可用容量 = " + file.getUsableSpace() / 1024 / 1024/1024 + "G" + "    ");// 可用空间
             System.out.print("总容量 = " + file.getTotalSpace() / 1024 / 1024/1024 + "G" + "    ");// 总空间
             System.out.println();
         }
@@ -113,6 +113,7 @@ public class Other {
     public static double getCpuUsedPercent(){
         OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
         double cpu = osMxBean.getSystemLoadAverage();
+
         return cpu;
     }
 }
